@@ -304,14 +304,6 @@ If the reasoning pattern is preserved:
 
 ---
 
-// 🔴 DISTRACTOR RULE (핵심 🔥)
-
-- Every wrong choice must share at least ONE concept with the correct answer
-- Wrong choices must be "partially correct but ultimately incorrect"
-- Do NOT create obviously wrong answers
-
----
-
 ////////////////////////////////////////////////////////////
 // 🔴 ORDERING QUESTION VALIDATION (순서 배열 전용 검증)
 ////////////////////////////////////////////////////////////
@@ -634,6 +626,11 @@ If violated:
 For summary questions:
 
 1. Each blank (A), (B) MUST have balanced distribution across options.
+The distribution MUST be randomized and NOT reveal any detectable pattern.
+
+- No option should be identifiable through frequency alone
+- Students MUST read the passage to determine the answer
+- The distribution across options MUST NOT form a predictable pattern (e.g., 2-2-1 or repeated pairing structures)
 
 - Do NOT allow one option in (A) to appear significantly more frequently than others.
 - Each key word in (A) must appear in at least TWO different options.
@@ -756,9 +753,6 @@ For short-answer:
 
 Violation = automatic regeneration
 
-After fixing a question:
-→ You MUST re-validate that question again before proceeding.
-
 ---
 
 ////////////////////////////////////////////////////////////
@@ -852,8 +846,11 @@ For short-answer questions:
 - capitalization
 - spacing
 
-4. Word count MUST be calculated AFTER removing punctuation,
-BUT the output MUST retain original punctuation.
+4. Word count MUST be calculated after removing punctuation,
+BUT the answer MUST preserve original punctuation in output.
+
+CRITICAL:
+Word counting and answer formatting MUST be treated as separate processes.
 
 5. If mismatch between:
 - passage version
@@ -876,39 +873,6 @@ If mismatch occurs:
 → You MUST revise the answer (NOT the condition)
 
 You must NEVER output incorrect word count in explanation.
-
----
-
-// 🔴 DISTRACTOR REINFORCEMENT (강화 — 이미 적용 보완)
-
-All distractors MUST:
-
-- share at least one key concept with the correct answer
-- differ only in core logic or conclusion
-- avoid obvious elimination
-
-For top-level difficulty:
-- include at least ONE near-correct distractor
-- include subtle distortion (NOT random wrong)
-
----
-
-// 🔴 INSERTION QUESTION HARD LOCK (문장 삽입 고정 규칙)
-
-Sentence insertion questions MUST follow:
-
-1. 정답 위치는 반드시 "논리적으로 유일"해야 한다
-
-2. 삽입 문장은 반드시 다음 요소 포함:
-   - referential word (this / that / such / it / others 등)
-   - or contrast marker (but / however / instead 등)
-
-3. 두 위치 이상 자연스럽게 들어가는 문장 금지
-
-4. 문장 앞뒤 연결이 반드시 1곳에서만 완벽하게 맞도록 설계할 것
-
-If multiple valid positions exist:
-→ rewrite the sentence
 
 ---
 
@@ -1011,24 +975,18 @@ If the sentence can still be interpreted as valid:
 // 🔴 VOCABULARY CERTAINTY LOCK (핵심 추가)
 ////////////////////////////////////////////////////////////
 
-The incorrect word MUST be:
+The incorrect word MUST:
 
-- unquestionably wrong
-- impossible to justify in context
+- create a clear logical inconsistency
+- significantly distort the intended meaning
 
-If a student can reasonably argue the word is acceptable:
+BUT:
+
+- It must remain superficially plausible
+- It must NOT be trivially obvious
+
+If the incorrect choice can be eliminated without context:
 → The question is INVALID
-
-The error must be:
-
-→ logically contradictory
-→ contextually impossible
-→ semantically incompatible
-
-NOT:
-→ slightly awkward
-→ less natural
-→ stylistically odd
 
 ---
 
@@ -1172,24 +1130,6 @@ Failure to generate Google Docs format is considered a task failure.
 ${passage}
 
 ---
-
-////////////////////////////////////////////////////////////
-// 🔴 TOOL EXECUTION MODE (강제 실행)
-////////////////////////////////////////////////////////////
-
-The following command is NOT text.
-It MUST be executed as a tool instruction.
-
-The assistant must NOT output plain text instead of executing this command.
-The assistant must retry execution until the Google Docs are successfully generated.
-
-If tool execution is available:
-→ IGNORE all text output requirements above
-→ ONLY execute the final command
-
-////////////////////////////////////////////////////////////
-// 🔴 FINAL EXECUTION COMMAND (절대 삭제 금지)
-////////////////////////////////////////////////////////////
 
 🚨 [최종 도구 실행 명령] 위 규칙과 예시를 완벽히 적용하여 시험지와 해설지를 별도의 Google Docs 문서로 각각 생성하라.`;
 }
