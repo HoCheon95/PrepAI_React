@@ -176,7 +176,6 @@ Use ONLY the core passage as the exam passage.
 
 ---
 
-
 // 🔴 PASSAGE MODE
 
 ${modification}
@@ -235,269 +234,80 @@ Blank inference question MUST NOT be solved by direct sentence copying.
 ---
 
 ////////////////////////////////////////////////////////////
-// 🔴 BLANK DIRECT MATCH ELIMINATION
+// 🔴 BLANK DIRECT MATCH ELIMINATION & ABSTRACTION
 ////////////////////////////////////////////////////////////
 
 The correct answer MUST NOT:
-
 - reuse key phrases directly from the original sentence
 - contain the same lexical core (e.g., overpowering → overwhelming)
 
-If the correct answer can be matched to the original sentence by synonym substitution only:
-→ The question is INVALID
-
-The answer must require:
-→ contextual inference
-→ abstraction
-→ conceptual understanding
-
-NOT surface-level paraphrasing
-
-Violation = automatic regeneration
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 BLANK ABSTRACTION ENFORCEMENT (핵심 추가)
-////////////////////////////////////////////////////////////
-
 The correct answer MUST express the idea at a higher level of abstraction than the original sentence.
-
 - Do NOT preserve original sentence structure
 - Do NOT map clause-to-clause correspondence
+- MUST reinterpret the situation or generalize the meaning
 
-The answer MUST:
-→ reinterpret the situation
-→ generalize the meaning
-→ shift from event → principle
-
-If the answer can be reverse-mapped to the original sentence:
-→ The question is INVALID
-
-Example violation:
-"overpowering mystery" → "incomprehensible phenomenon" ❌
-
-Required:
-→ conceptual transformation, NOT lexical substitution
-
-The correct answer MUST NOT preserve the original sentence structure.
-
-If grammatical structure matches the original:
-→ INVALID
-
-The answer MUST NOT maintain the same logical structure or argument flow as the original sentence.
-
-The answer MUST change the reasoning type of the sentence (e.g., from behavioral reaction → cognitive limitation or principle-level interpretation).
-
-CRITICAL:
-
-The answer MUST NOT follow the same reasoning pattern as the original sentence.
-
-If the original expresses:
-→ stimulus → behavioral response
-
-The answer MUST shift to:
-→ cognitive limitation OR abstract principle OR general rule
-
-If the reasoning pattern is preserved:
-→ The question is INVALID and MUST be regenerated
+If the reasoning pattern is preserved (e.g., original is stimulus->response, and answer is also stimulus->response):
+→ The question is INVALID and MUST be regenerated.
 
 ---
 
 ////////////////////////////////////////////////////////////
-// 🔴 ORDERING QUESTION VALIDATION (순서 배열 전용 검증)
-////////////////////////////////////////////////////////////
-
-For sequence ordering questions:
-
-1. The correct answer must NOT be derivable by simple chronological order alone.
-
-2. If an alternative sequence forms a logically coherent narrative:
-→ The question is INVALID and MUST be revised.
-
-3. Each segment MUST include at least one of the following:
-   - referential dependency (this, that, it, such, he, etc.)
-   - causal marker (because, therefore, so, thus, etc.)
-   - contrast or concession (but, however, although, etc.)
-
-4. The order between segments MUST be strictly constrained.
-
-- At least ONE segment must contain a backward reference that can ONLY be interpreted if placed after another segment.
-- At least ONE segment must contain a forward dependency that cannot logically appear earlier.
-
-5. If two segments can switch positions without breaking logical coherence:
-→ The question is INVALID and MUST be reconstructed.
-
-6. At least ONE incorrect option must appear MORE natural in surface narrative flow than the correct answer,
-but must fail under deeper logical analysis.
-
-7. The correct answer MUST require:
-→ causal reasoning OR referential dependency
-NOT simple story progression.
-
-If violated:
-→ You MUST reconstruct ALL segments to enforce unique logical ordering
-→ Then regenerate ALL answer choices accordingly
-
-CRITICAL:
-
-The correct answer MUST NOT align with simple chronological order.
-
-At least ONE incorrect option MUST follow natural time order.
-
-The correct answer MUST violate surface-level chronology,
-and only be solvable through:
-
-→ referential dependency
-→ causal reasoning
-
-If chronological order alone leads to the correct answer:
-→ The question is INVALID and MUST be reconstructed
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 SEQUENCE SEGMENT GENERATION LOCK (문장 자체 강제)
+// 🔴 SEQUENCE SEGMENT GENERATION LOCK (문장 자체 강제 - EXTREME)
 ////////////////////////////////////////////////////////////
 
 Before validation, ALL sequence segments MUST:
 
-1. Contain at least ONE:
-   - referential word (this, that, it, such, he, etc.)
-   OR
-   - causal marker (because, so, therefore, thus, etc.)
+1. MUST include a referential dependency that requires a specific prior segment AND a logical constraint. Standalone conjunctions (e.g., but, and, so) are NOT sufficient.
 
-2. MUST NOT be standalone descriptive sentences.
+2. ITERATION & EVALUATION MARKER LOCK (CRITICAL):
+If the narrative involves repeated actions, reactions, or evaluations, the segment MUST EXPLICITLY reference the specific iteration or target.
+- FORBIDDEN: "My friend smiled gently..." (Can be placed anywhere logically).
+- REQUIRED: "After examining my second drawing, my friend smiled gently..." OR "Seeing the previous attempt..."
+- Every reaction/evaluation segment MUST contain words like "second", "previous", "that [specific object]", or "this new [action]".
 
-3. MUST require dependency on another segment.
+3. MUST NOT be standalone descriptive sentences.
+Generic emotional or descriptive sentences without explicit referential anchors are FORBIDDEN.
 
-If any segment can stand independently:
-→ regenerate that segment
-
-This rule applies BEFORE sequence validation
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 SEQUENCE SEMANTIC DEPENDENCY LOCK
-////////////////////////////////////////////////////////////
-
-Each segment MUST:
-
-- depend on a previous segment for full interpretation
-- include at least one incomplete reference or implied subject
-
-Standalone factual statements are FORBIDDEN.
-
-If a segment can be understood independently without context:
-→ regenerate that segment
-
-The sequence must NOT be solvable by:
-→ content familiarity
-→ general story logic
-
-Only logical dependency must determine order
+If a segment can be interpreted independently or placed in multiple positions without breaking grammar:
+→ REGENERATE that segment immediately to include a specific anchor.
 
 ---
 
 ////////////////////////////////////////////////////////////
-// 🔴 SEQUENCE TEMPORAL CONSISTENCY LOCK (순서 시간 논리 고정)
+// 🔴 SEQUENCE UNIQUE RESOLUTION LOCK (최종 결정타)
 ////////////////////////////////////////////////////////////
 
-For sequence questions:
+CRITICAL: The sequence MUST be constructed so that ONLY ONE ordering allows ALL dependencies to resolve correctly.
 
-1. Each segment MUST follow strict temporal progression.
-
-2. If any segment implies an action that logically occurs AFTER another segment:
-→ It MUST NOT appear before that segment.
-
-3. If a segment contains:
-   - "again"
-   - "once more"
-   - "another"
-→ It MUST be placed AFTER at least one prior attempt/action.
-
-4. If placing segments in correct answer creates:
-→ duplicated action
-→ reversed causality
-→ timeline contradiction
-
-→ The question is INVALID and MUST be reconstructed.
-
-5. The final sequence MUST satisfy BOTH:
-→ logical dependency
-→ temporal consistency
-
-Violation = automatic regeneration
+1. Each segment MUST introduce a UNIQUE reference that is resolved by EXACTLY ONE other segment.
+2. Cross-resolution MUST exist forcing a strict chain.
+3. If ANY alternative ordering (e.g., C-B-A instead of B-A-C) resolves all references and produces a coherent narrative:
+→ The question is INVALID and MUST be fully reconstructed.
+4. Reverse-order plausibility MUST be tested.
 
 ---
 
 ////////////////////////////////////////////////////////////
-// 🔴 INSERTION LOGIC VALIDATION (핵심 패치)
+// 🔴 INSERTION LOGIC VALIDATION & SINGLE-POINT LOCK (핵심 패치)
 ////////////////////////////////////////////////////////////
 
 For sentence insertion questions:
 
-1. Removing the sentence MUST create a clear logical gap.
+1. EXPLICIT ANCHOR PHRASE MANDATORY:
+The inserted sentence MUST contain a [Demonstrative + Specific Noun Phrase] that summarizes the exact condition of the PRECEDING sentence.
+- FORBIDDEN: "And yet my little man seemed neither..." (Too generic, can fit multiple places).
+- REQUIRED: "And yet, despite this extreme isolation, my little man seemed neither..."
+- The anchor MUST tie to EXACTLY ONE unique event/situation in the text.
 
-2. The inserted sentence MUST:
-   - add NEW information (NOT repetition)
-   - introduce contrast, cause, explanation, or referential dependency
+2. ZERO SEMANTIC DUPLICATION RULE:
+The inserted sentence MUST NOT share the same meaning, narrative function, or descriptive result as the sentence IMMEDIATELY FOLLOWING IT.
+- If the inserted sentence says "he showed no signs of distress" AND the next sentence says "Nothing about him gave any suggestion of exhaustion":
+→ The question is INVALID due to semantic duplication.
+- The inserted sentence MUST add a NEW logical bridge (e.g., cause, contrast) rather than just repeating the next sentence's point.
 
-3. The inserted sentence MUST NOT be a paraphrase of adjacent sentences.
-
-- If the sentence expresses the same meaning as the preceding or following sentence:
-→ The question is INVALID.
-
-4. The correct position MUST be UNIQUE.
-
-- If the sentence can logically fit in more than one position:
-→ The question is INVALID and MUST be reconstructed.
-
-5. The insertion MUST introduce a necessary logical bridge.
-
-- The passage must NOT remain fully coherent without the sentence.
-→ If coherence is maintained:
-→ insertion is INVALID.
-
-6. The sentence MUST include a strong referential anchor:
-   (this, that, such, these, or explicit situation reference)
-
-7. At least one incorrect position must appear superficially plausible,
-but must fail due to missing referential or logical connection.
-
-If violated:
-→ You MUST reconstruct the insertion sentence and regenerate all options accordingly
-
-If there is any conflict between insertion rules:
-→ PRIORITIZE INSERTION LOGIC VALIDATION over all other insertion rules.
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 INSERTION UNIQUE ANCHOR LOCK (핵심 추가)
-////////////////////////////////////////////////////////////
-
-The inserted sentence MUST contain:
-
-- a referential anchor (this / that / such / it)
-AND
-- a logical dependency that connects ONLY to one specific sentence
-
-The sentence MUST:
-
-- explicitly depend on a specific prior event
-- create a contradiction or gap if placed elsewhere
-
-If the sentence fits in more than one position:
-→ The question is INVALID
-
-MANDATORY:
-→ one-directional dependency only
-
-The referential anchor MUST point to a UNIQUE antecedent that appears in ONLY one position in the passage.
-
-The sentence MUST break logical coherence if placed in any position other than the correct one.
+3. The sentence MUST FAIL in ALL other positions by creating a logical contradiction, breaking causal flow, or referencing a non-existent prior event.
+4. If the sentence works in MORE THAN ONE position (e.g., position 1 and 2 both make sense):
+→ REGENERATE the sentence to include a stronger, unique back-reference.
 
 ---
 
@@ -506,18 +316,7 @@ The sentence MUST break logical coherence if placed in any position other than t
 ////////////////////////////////////////////////////////////
 
 Questions MUST be solvable through logical reasoning ONLY.
-
-If solving the question requires:
-- memorization of the original text
-- familiarity with the source material
-
-→ The question is INVALID.
-
-All answers must be derivable from:
-- logical connections
-- explicit textual clues
-
-NOT recall.
+If solving the question requires memorization of the original text -> INVALID.
 
 ---
 
@@ -526,66 +325,20 @@ NOT recall.
 ////////////////////////////////////////////////////////////
 
 You must construct ALL incorrect choices using CSAT-level distractor logic.
-
-- 모든 오답은 정답과 의미 일부를 공유할 것
-- "부분적으로 맞지만 핵심이 틀린 구조"로 만들 것
-
-반드시 포함:
-- cause/result 왜곡
-- general/specific 왜곡
-- 주체 변경
-- 키워드 일부만 반영
-
-난이도:
-- 1개: 매우 강한 오답
-- 2~3개: 중간
-- 1개: 비교적 쉬움
-
-금지:
-- 완전 무관
-- 단순 반대말
-- 지문 없는 정보
-
-요약문 오답:
-- perception / interpretation / logic 반드시 포함
+- 모든 오답은 정답과 의미 일부를 공유할 것 ("부분적으로 맞지만 핵심이 틀린 구조")
+- 반드시 포함: cause/result 왜곡, general/specific 왜곡, 주체 변경, 키워드 일부만 반영
+- 완전 무관한 오답, 단순 반대말, 지문 없는 정보 절대 금지.
 
 ---
 
-// 🔴 DIFFICULTY ENFORCEMENT
-
-[순서 배열]
-- Must NOT be solvable by time order only
-- Must require logical inference
-
-[문장 삽입]
-- Must be placed in the middle of the passage
-- Must NOT be solvable by local clues only
-
----
-
-// 🔴 HARD DIFFICULTY ENFORCEMENT (추가)
+// 🔴 DIFFICULTY ENFORCEMENT & HARD LOCKS
 
 [순서 배열 강화]
-- At least ONE option must match chronological order but be incorrect
-- The correct answer must violate simple time sequence
-- Include at least ONE chronological trap option
-- The correct answer must NOT be recoverable by simple time sequence alone
-- Require causal or referential reasoning in addition to order
-- The correct answer MUST NOT be inferable without evaluating ALL options
+- At least ONE option must match chronological order but be incorrect.
+- The correct answer must violate simple time sequence and require causal/referential reasoning.
 
 [문장 삽입 강화]
-- The correct answer must depend on paragraph-level context
-- Adjacent sentence clues alone must NOT be sufficient
-- At least one incorrect option must appear more logical than the correct answer at first glance
-- The correct answer must require global context, not local sentence flow
-- If the order is obvious without reading the full passage:
-→ rewrite the sequence
-
----
-
-// 🔴 GRAMMAR RULE
-
-- Exactly ONE grammatical error must exist in grammar question
+- The correct answer must depend on paragraph-level context, not just local clues.
 
 ---
 
@@ -598,440 +351,84 @@ You must construct ALL incorrect choices using CSAT-level distractor logic.
 
 ---
 
-// 🔴 SUMMARY QUESTION HARD LOCK
+////////////////////////////////////////////////////////////
+// 🔴 SUMMARY QUESTION HARD LOCK & OPTION DISTRIBUTION
+////////////////////////////////////////////////////////////
 
 Summary question MUST follow:
-
 ① A — B
 ② A — B
-③ A — B
-④ A — B
-⑤ A — B
+... Only ONE set allowed. Forbidden: single-word options.
 
-Only ONE set allowed.
+Each blank (A), (B) MUST have balanced distribution across options.
+- No option should be identifiable through frequency alone.
+- Do NOT allow one option in (A) to appear significantly more frequently.
+- The correct answer MUST include the most conceptually central keyword of the passage.
 
-Forbidden:
-- single-word options
-- duplicated formats
+---
 
-If violated:
-→ rewrite immediately
+// 🔴 TITLE & MAIN IDEA QUESTION HARD LOCK
+
+- Title: MUST be the MOST comprehensive and abstract option. Wrong choices MUST include specific details.
+- Main Idea: MUST be strictly more comprehensive than ALL other options. Wrong choices MUST omit context, outcome, or core mechanism.
 
 ---
 
 ////////////////////////////////////////////////////////////
-// 🔴 SUMMARY OPTION DISTRIBUTION LOCK (선택지 분배 강제)
+// 🔴 VOCABULARY QUESTION HARD LOCK (어휘 밸런스 완벽 고정)
 ////////////////////////////////////////////////////////////
 
-For summary questions:
+Vocabulary question MUST contain exactly ONE contextually incorrect word.
+The incorrect word MUST create a clear logical contradiction, BUT it MUST remain superficially plausible.
 
-1. Each blank (A), (B) MUST have balanced distribution across options.
-The distribution MUST be randomized and NOT reveal any detectable pattern.
+CRITICAL: DISTRACTOR HOMOGENEITY RULE (No "Odd-One-Out")
+1. Part of Speech & Form Lock: The incorrect choice MUST naturally fit the grammar of the sentence. Do NOT mix completely different word classes that stick out.
+2. Tone/Sentiment Camouflage: You MUST NOT create a situation where 4 words share a similar tone (e.g., negative/descriptive states like 'isolated', 'exhausted', 'cumbersome') and 1 word completely breaks the pattern (e.g., an active positive verb like 'approve').
+- The replacement MUST blend perfectly into the list. (e.g., If others are descriptive adjectives, instead of "approve", use "accept", "acknowledge", or match the adjective form).
+3. The "Two-Plausible" Rule: At least TWO options MUST appear contextually plausible but require deep sentence/paragraph evaluation to determine correctness. The answer MUST NOT be instantly recognizable by glancing at the 5 words alone.
 
-- No option should be identifiable through frequency alone
-- Students MUST read the passage to determine the answer
-- The distribution across options MUST NOT form a predictable pattern (e.g., 2-2-1 or repeated pairing structures)
-
-- Do NOT allow one option in (A) to appear significantly more frequently than others.
-- Each key word in (A) must appear in at least TWO different options.
-
-2. If one choice in (A) or (B) can be guessed without reading the passage:
-→ The question is INVALID and MUST be rewritten.
-
-3. Eliminate test-wise shortcuts based on frequency or pattern recognition.
+The following words are FORBIDDEN as incorrect choices:
+- cursorily, casually, loosely, somewhat, relatively
 
 ---
 
-////////////////////////////////////////////////////////////
-// 🔴 SUMMARY KEYWORD QUALITY LOCK (핵심 키워드 강화)
-////////////////////////////////////////////////////////////
+// 🔴 SHORT-ANSWER & DESCRIPTIVE WORD COUNT LOCK
 
-1. The correct answer MUST include the most conceptually central keyword of the passage.
-
-2. Avoid overly abstract or vague substitutes if a stronger keyword exists.
-
-Example:
-- Prefer "imagination" over weaker substitutes like "interpretation" when the passage clearly supports it.
-
-3. If a more precise or representative keyword exists in the passage:
-→ The current correct answer MUST be replaced.
+For any short-answer/descriptive question:
+1. Extract the answer FIRST from the passage.
+2. Count words EXACTLY using space-separated tokens (after removing punctuation).
+3. THEN generate the question condition based on the actual count.
+4. The extracted answer MUST match the original passage EXACTLY (preserve punctuation, capitalization, spacing).
+5. Mismatch = automatic regeneration.
 
 ---
 
-// 🔴 TITLE QUESTION HARD LOCK
+// 🔴 PRONOUN QUESTION HARD LOCK
 
-Title question MUST follow:
+Options MUST be exactly:
+① (1) / ② (2) / ③ (3) / ④ (4) / ⑤ (5)
 
-- The correct answer MUST be the MOST comprehensive and abstract option
-- It must cover the ENTIRE passage, not a specific detail
-
-FORBIDDEN for correct answer:
-- Specific objects (e.g., box, sheep, desert event)
-- Single-scene descriptions
-- Partial themes
-
-Wrong choices MUST:
-- include specific details
-- be partially correct but narrower in scope
-
-If a more comprehensive option exists:
-→ current answer MUST be replaced
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 MAIN IDEA QUESTION HARD LOCK
-////////////////////////////////////////////////////////////
-
-The correct answer MUST be strictly more comprehensive than ALL other options.
-
-If another option can reasonably be considered a main idea:
-→ The question is INVALID
-
-Wrong choices MUST:
-→ emphasize only one aspect of the passage
-→ omit either:
-   - context
-   - outcome
-   - core mechanism
-
-At least one distractor MUST appear highly plausible,
-but fail due to missing a critical component of the full argument.
-
----
-
-// 🔴 CHAIN OF THOUGHT (내부 실행)
-
-1. Identify main idea and contrast structure
-2. Set question intent per type
-3. Decide correct answer first
-4. Build distractors with shared logic
-5. Validate uniqueness of answer
-6. Check format and grammar
-
-DO NOT OUTPUT THIS PROCESS
+- 보기의 모든 대명사 유형을 통일할 것 (예: him / him / him / him / him)
+- 의미 기반으로만 구별 가능하게 설계할 것.
 
 ---
 
 // 🔴 AUTO VALIDATION SYSTEM (문제 자동 검수 — 필수 실행)
 
-If TWO choices can be correct:
-→ Rewrite distractors immediately
-
-You must NEVER output ambiguous questions
-
 After generating ALL questions, you MUST run a validation check.
-
-For EACH question, verify:
-
 1. 정답이 단 하나인지 확인할 것
-2. 다른 선택지가 정답처럼 보이지 않는지 확인할 것
+2. 다른 선택지가 정답처럼 보이지 않는지 확인할 것 (특히 순서배열, 문장삽입)
 3. 지문 근거가 명확한지 확인할 것
 4. 오답이 논리적 Distractor인지 확인할 것
-5. If the question is short-answer or descriptive, verify the actual word count
-6. If the explanation states a word count, it must exactly match the actual count
-7. Ensure the question can be solved WITHOUT prior knowledge of the original text
-8. Ensure that all correct answers require reasoning based on:
-   - logical structure
-   - textual evidence
-   NOT recall
 
-If mismatch:
-→ correct the explanation immediately
-
-If ANY issue is found:
-→ regenerate the question
-→ re-run validation for that question
-
-You must NOT output until all questions pass validation.
-
-For short-answer:
-
-- The extracted phrase MUST appear exactly in the passage
-- Do NOT paraphrase
-- Do NOT reconstruct
-
-Violation = automatic regeneration
+If ANY rule fails (especially sequence unique ordering or insertion unique placement):
+→ 1. Identify the flawed question
+→ 2. Modify ONLY that question (DO NOT regenerate the entire exam)
+→ 3. Re-run validation until ALL checks pass.
 
 ---
 
-////////////////////////////////////////////////////////////
-// 🔴 AUTO FIX EXECUTION SYSTEM (강제 수정)
-////////////////////////////////////////////////////////////
-
-If ANY validation rule fails:
-
-1. Identify the flawed question
-2. Modify ONLY that question
-3. Re-run validation for that question
-4. Repeat until ALL checks pass
-
-CRITICAL:
-
-- DO NOT regenerate the entire exam
-- ONLY fix flawed questions
-- DO NOT output intermediate drafts
-- ONLY output FINAL corrected version
-
-Failure to comply = invalid output
-
----
-
-// 🔴 SHORT-ANSWER WORD COUNT LOCK (완전 패치)
-
-For any short-answer question:
-
-- Word count MUST be calculated after removing punctuation marks
-- Count words using whitespace-separated tokens only
-
-Example:
-"Where I live, everything is very small" → remove punctuation → "Where I live everything is very small" = 6 words
-
-CRITICAL:
-
-1. Extract the answer FIRST from the passage
-2. Count words EXACTLY using space-separated tokens
-3. THEN generate the question condition
-
-You must NEVER fabricate or alter the extracted phrase.
-
-If mismatch occurs:
-→ You MUST adjust the question condition (NOT the answer)
-
-NEVER output a mismatch between:
-- required word count
-- actual answer
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 SHORT ANSWER CONDITION AUTO-CORRECTION
-////////////////////////////////////////////////////////////
-
-After extracting the answer:
-
-1. Count words (after removing punctuation)
-
-2. The question condition MUST be generated based on the actual count
-
-3. You must NOT:
-- predefine word count
-- assume word count
-
-4. If mismatch exists:
-→ automatically rewrite the question condition
-
-Example:
-Actual count = 6 → question must require 6 words
-
-Violation = automatic regeneration
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 SHORT ANSWER EXACT MATCH LOCK (원문 일치 강제)
-////////////////////////////////////////////////////////////
-
-For short-answer questions:
-
-1. The extracted answer MUST match the original passage EXACTLY.
-
-2. Do NOT:
-- remove commas
-- remove punctuation
-- rephrase or simplify
-
-3. The answer MUST preserve:
-- punctuation
-- capitalization
-- spacing
-
-4. Word count MUST be calculated after removing punctuation,
-BUT the answer MUST preserve original punctuation in output.
-
-CRITICAL:
-Word counting and answer formatting MUST be treated as separate processes.
-
-5. If mismatch between:
-- passage version
-- answer version
-
-→ The question is INVALID and MUST be regenerated
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 DESCRIPTIVE ANSWER WORD COUNT VALIDATION
-////////////////////////////////////////////////////////////
-
-For any descriptive (sentence-writing) answer:
-
-1. Count total words using space-separated tokens
-2. Ensure it satisfies the required range (e.g., 15~20 words)
-
-If mismatch occurs:
-→ You MUST revise the answer (NOT the condition)
-
-You must NEVER output incorrect word count in explanation.
-
----
-
-// 🔴 INSERTION OPTION FORMAT LOCK
-
-Options MUST be exactly:
-
-① ( ① )
-② ( ② )
-③ ( ③ )
-④ ( ④ )
-⑤ ( ⑤ )
-
-No variation allowed.
-
----
-
-// 🔴 PRONOUN QUESTION HARD LOCK (대명사 문제 고정 규칙)
-
-Pronoun reference questions MUST follow:
-
-1. 보기의 모든 대명사 유형을 통일할 것
-   (예: me / him / him / him / him)
-
-2. 정답은 반드시 "단 하나만" 다른 대상을 가리킬 것
-
-3. 아래 상황 금지:
-   - I / my / me 혼합
-   - 문법 형태 차이로 정답 유추 가능
-
-4. 의미 기반으로만 구별 가능하게 설계할 것
-
----
-
-// 🔴 PRONOUN OPTION FORMAT LOCK
-
-Options MUST be exactly:
-
-① (1)
-② (2)
-③ (3)
-④ (4)
-⑤ (5)
-
-No duplication allowed.
-
----
-
-// 🔴 CONTENT MATCH QUESTION HARD LOCK (내용일치 강화)
-
-Wrong choices MUST:
-
-- be partially correct but contain one critical error
-- NOT be obviously false
-
-Use:
-- reversed logic
-- exaggerated claim
-- missing condition
-
----
-
-// 🔴 VOCABULARY QUESTION HARD LOCK (어휘 문제 안정화)
-
-Vocabulary question MUST:
-
-- contain only ONE incorrect word
-- all other words must be perfectly natural
-
-If more than one incorrect word exists:
-→ revise immediately
-
-- Do NOT create the incorrect option as a simple direct antonym
-- The incorrect word must be plausibly close in context, not obviously opposite
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 VOCABULARY CONTRADICTION HARD LOCK
-////////////////////////////////////////////////////////////
-
-The incorrect word MUST:
-
-- create a logical contradiction with the sentence outcome
-- make the following sentence impossible or inconsistent
-
-NOT allowed:
-- weaker nuance difference
-- reduced intensity (e.g., cursorily, carelessly)
-
-MANDATORY:
-→ The sentence must become logically incoherent
-
-If the sentence can still be interpreted as valid:
-→ regenerate the question
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 VOCABULARY CERTAINTY LOCK (핵심 추가)
-////////////////////////////////////////////////////////////
-
-The incorrect word MUST:
-
-- create a clear logical inconsistency
-- significantly distort the intended meaning
-
-BUT:
-
-- It must remain superficially plausible
-- It must NOT be trivially obvious
-
-If the incorrect choice can be eliminated without context:
-→ The question is INVALID
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 WEAK DISTRACTOR WORD BLACKLIST
-////////////////////////////////////////////////////////////
-
-The following words are FORBIDDEN as incorrect choices:
-
-- cursorily
-- casually
-- loosely
-- somewhat
-- relatively
-
-Reason:
-These words do NOT create strong logical contradiction.
-
-If such words are used:
-→ regenerate the vocabulary question
-
----
-
-// 🔴 FINAL SAFETY CHECK
-
-Before output:
-
-- Ensure NO duplicate answers
-- Ensure NO ambiguous correct answers
-- Ensure formatting is correct
-- Ensure each question has exactly 5 options
-
-If ANY issue exists:
-→ fix before output
-
----
-
-// 🔴 CORRECTION RULE
-
-- You must NOT regenerate entire exam
-- You must ONLY fix flawed questions internally before final output
-
----
-
-// 🔴 OUTPUT FORMAT (절대 변경 금지)
+// 🔴 FINAL SAFETY CHECK & OUTPUT FORMAT
 
 [시험지]
 
@@ -1048,14 +445,7 @@ If ANY issue exists:
 ④
 ⑤
 
-2. 다음 글의 주제로 가장 적절한 것은?
-①
-②
-③
-④
-⑤
-
-(모든 문항 동일 형식 유지)
+... (모든 문항 동일)
 
 ---
 
@@ -1065,53 +455,7 @@ If ANY issue exists:
 - 근거:
 - 오답 해설:
 
-(모든 문항 동일 형식 유지)
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 OUTPUT FORMAT HARD LOCK (Docs 깨짐 방지)
-////////////////////////////////////////////////////////////
-
-1. 선택지는 반드시 줄바꿈으로 출력할 것
-2. 각 선택지는 ①②③④⑤ 번호만 사용할 것
-3. 문제 간 한 줄 공백 유지
-4. [ ________ ] 유지
-5. 서술형 조건 반드시 그대로 출력:
-
-"15~20단어 사이로 작성할 것 (필요시 단어 추가 및 형태 변화 가능)"
-
----
-
-////////////////////////////////////////////////////////////
-// 🔴 GOOGLE DOCS GENERATION SYSTEM
-////////////////////////////////////////////////////////////
-
-You MUST output TWO clearly separated sections in ONE response:
-
-[시험지]
-
-[해설지]
-
-The order MUST be:
-1. [시험지]
-2. [해설지]
-
-Do NOT merge or mix the sections.
-Do NOT remove section labels.
-Do NOT change section order.
-
-[해설지] 포함:
-- 정답
-- 근거 문장
-- 오답 해설
-
-Google Docs에 바로 복붙 가능한 형태로 출력할 것
-
-- Maintain spacing
-- Maintain readability
-- Do NOT compress lines
-
+... (모든 문항 동일)
 
 ---
 
@@ -1119,9 +463,15 @@ Google Docs에 바로 복붙 가능한 형태로 출력할 것
 // 🔴 GOOGLE DOCS EXECUTION HARD LOCK
 ////////////////////////////////////////////////////////////
 
-You MUST treat the final execution command as a REQUIRED ACTION, not as text.
+You MUST output TWO clearly separated sections in ONE response:
+1. [시험지]
+2. [해설지]
 
-Failure to generate Google Docs format is considered a task failure.
+Google Docs에 바로 복붙 가능한 형태로 출력할 것.
+- 선택지는 반드시 줄바꿈으로 출력할 것
+- 각 선택지는 ①②③④⑤ 번호만 사용할 것
+- 문제 간 한 줄 공백 유지
+- 서술형 조건 반드시 그대로 출력: "15~20단어 사이로 작성할 것 (필요시 단어 추가 및 형태 변화 가능)"
 
 ---
 
@@ -1131,7 +481,11 @@ ${passage}
 
 ---
 
-🚨 [최종 도구 실행 명령] 위 규칙과 예시를 완벽히 적용하여 시험지와 해설지를 별도의 Google Docs 문서로 각각 생성하라.`;
+🚨 [최종 도구 실행 명령]
+
+위 규칙을 모두 적용하여
+하나의 응답 내에서 [시험지]와 [해설지] 두 섹션으로
+Google Docs에 바로 복붙 가능한 형태로 출력하라.`;
 }
 
 // ── 모의고사 프롬프트 템플릿 ───────────────────────────────────────────────────
