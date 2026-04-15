@@ -117,7 +117,7 @@ export function getExternalPassageText(key: string, externalRegistry: ExternalRe
   return item.questions.map((q) => q.passage).join('\n\n');
 }
 
-// ── 프롬프트 템플릿 ───────────────────────────────────────────────────
+// ── 외부지문 프롬프트 템플릿 ───────────────────────────────────────────────────
 
 function buildExternalTemplate(passage: string, difficulty: string, modification: string, typesString: string): string {
   return `////////////////////////////////////////////////////////////
@@ -127,7 +127,7 @@ function buildExternalTemplate(passage: string, difficulty: string, modification
 This prompt is a FINAL INTEGRATED GENERATION + VALIDATION TEMPLATE.
 
 - You must NOT modify, summarize, restructure, or optimize this prompt.
-- You must output this prompt EXACTLY as written.
+- You must follow all rules strictly.
 - You are NOT allowed to reinterpret or improve any part of this prompt.
 - You must NOT ignore any section of this prompt
 - You must execute ALL stages in order
@@ -234,6 +234,75 @@ Blank inference question MUST NOT be solved by direct sentence copying.
 
 ---
 
+////////////////////////////////////////////////////////////
+// 🔴 BLANK DIRECT MATCH ELIMINATION
+////////////////////////////////////////////////////////////
+
+The correct answer MUST NOT:
+
+- reuse key phrases directly from the original sentence
+- contain the same lexical core (e.g., overpowering → overwhelming)
+
+If the correct answer can be matched to the original sentence by synonym substitution only:
+→ The question is INVALID
+
+The answer must require:
+→ contextual inference
+→ abstraction
+→ conceptual understanding
+
+NOT surface-level paraphrasing
+
+Violation = automatic regeneration
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 BLANK ABSTRACTION ENFORCEMENT (핵심 추가)
+////////////////////////////////////////////////////////////
+
+The correct answer MUST express the idea at a higher level of abstraction than the original sentence.
+
+- Do NOT preserve original sentence structure
+- Do NOT map clause-to-clause correspondence
+
+The answer MUST:
+→ reinterpret the situation
+→ generalize the meaning
+→ shift from event → principle
+
+If the answer can be reverse-mapped to the original sentence:
+→ The question is INVALID
+
+Example violation:
+"overpowering mystery" → "incomprehensible phenomenon" ❌
+
+Required:
+→ conceptual transformation, NOT lexical substitution
+
+The correct answer MUST NOT preserve the original sentence structure.
+
+If grammatical structure matches the original:
+→ INVALID
+
+The answer MUST NOT maintain the same logical structure or argument flow as the original sentence.
+
+The answer MUST change the reasoning type of the sentence (e.g., from behavioral reaction → cognitive limitation or principle-level interpretation).
+
+CRITICAL:
+
+The answer MUST NOT follow the same reasoning pattern as the original sentence.
+
+If the original expresses:
+→ stimulus → behavioral response
+
+The answer MUST shift to:
+→ cognitive limitation OR abstract principle OR general rule
+
+If the reasoning pattern is preserved:
+→ The question is INVALID and MUST be regenerated
+
+---
 
 // 🔴 DISTRACTOR RULE (핵심 🔥)
 
@@ -278,6 +347,97 @@ If violated:
 → You MUST reconstruct ALL segments to enforce unique logical ordering
 → Then regenerate ALL answer choices accordingly
 
+CRITICAL:
+
+The correct answer MUST NOT align with simple chronological order.
+
+At least ONE incorrect option MUST follow natural time order.
+
+The correct answer MUST violate surface-level chronology,
+and only be solvable through:
+
+→ referential dependency
+→ causal reasoning
+
+If chronological order alone leads to the correct answer:
+→ The question is INVALID and MUST be reconstructed
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 SEQUENCE SEGMENT GENERATION LOCK (문장 자체 강제)
+////////////////////////////////////////////////////////////
+
+Before validation, ALL sequence segments MUST:
+
+1. Contain at least ONE:
+   - referential word (this, that, it, such, he, etc.)
+   OR
+   - causal marker (because, so, therefore, thus, etc.)
+
+2. MUST NOT be standalone descriptive sentences.
+
+3. MUST require dependency on another segment.
+
+If any segment can stand independently:
+→ regenerate that segment
+
+This rule applies BEFORE sequence validation
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 SEQUENCE SEMANTIC DEPENDENCY LOCK
+////////////////////////////////////////////////////////////
+
+Each segment MUST:
+
+- depend on a previous segment for full interpretation
+- include at least one incomplete reference or implied subject
+
+Standalone factual statements are FORBIDDEN.
+
+If a segment can be understood independently without context:
+→ regenerate that segment
+
+The sequence must NOT be solvable by:
+→ content familiarity
+→ general story logic
+
+Only logical dependency must determine order
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 SEQUENCE TEMPORAL CONSISTENCY LOCK (순서 시간 논리 고정)
+////////////////////////////////////////////////////////////
+
+For sequence questions:
+
+1. Each segment MUST follow strict temporal progression.
+
+2. If any segment implies an action that logically occurs AFTER another segment:
+→ It MUST NOT appear before that segment.
+
+3. If a segment contains:
+   - "again"
+   - "once more"
+   - "another"
+→ It MUST be placed AFTER at least one prior attempt/action.
+
+4. If placing segments in correct answer creates:
+→ duplicated action
+→ reversed causality
+→ timeline contradiction
+
+→ The question is INVALID and MUST be reconstructed.
+
+5. The final sequence MUST satisfy BOTH:
+→ logical dependency
+→ temporal consistency
+
+Violation = automatic regeneration
+
 ---
 
 ////////////////////////////////////////////////////////////
@@ -319,6 +479,33 @@ If violated:
 
 If there is any conflict between insertion rules:
 → PRIORITIZE INSERTION LOGIC VALIDATION over all other insertion rules.
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 INSERTION UNIQUE ANCHOR LOCK (핵심 추가)
+////////////////////////////////////////////////////////////
+
+The inserted sentence MUST contain:
+
+- a referential anchor (this / that / such / it)
+AND
+- a logical dependency that connects ONLY to one specific sentence
+
+The sentence MUST:
+
+- explicitly depend on a specific prior event
+- create a contradiction or gap if placed elsewhere
+
+If the sentence fits in more than one position:
+→ The question is INVALID
+
+MANDATORY:
+→ one-directional dependency only
+
+The referential anchor MUST point to a UNIQUE antecedent that appears in ONLY one position in the passage.
+
+The sentence MUST break logical coherence if placed in any position other than the correct one.
 
 ---
 
@@ -471,7 +658,8 @@ Example:
 
 3. If a more precise or representative keyword exists in the passage:
 → The current correct answer MUST be replaced.
---
+
+---
 
 // 🔴 TITLE QUESTION HARD LOCK
 
@@ -491,6 +679,27 @@ Wrong choices MUST:
 
 If a more comprehensive option exists:
 → current answer MUST be replaced
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 MAIN IDEA QUESTION HARD LOCK
+////////////////////////////////////////////////////////////
+
+The correct answer MUST be strictly more comprehensive than ALL other options.
+
+If another option can reasonably be considered a main idea:
+→ The question is INVALID
+
+Wrong choices MUST:
+→ emphasize only one aspect of the passage
+→ omit either:
+   - context
+   - outcome
+   - core mechanism
+
+At least one distractor MUST appear highly plausible,
+but fail due to missing a critical component of the full argument.
 
 ---
 
@@ -547,6 +756,9 @@ For short-answer:
 
 Violation = automatic regeneration
 
+After fixing a question:
+→ You MUST re-validate that question again before proceeding.
+
 ---
 
 ////////////////////////////////////////////////////////////
@@ -595,6 +807,59 @@ If mismatch occurs:
 NEVER output a mismatch between:
 - required word count
 - actual answer
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 SHORT ANSWER CONDITION AUTO-CORRECTION
+////////////////////////////////////////////////////////////
+
+After extracting the answer:
+
+1. Count words (after removing punctuation)
+
+2. The question condition MUST be generated based on the actual count
+
+3. You must NOT:
+- predefine word count
+- assume word count
+
+4. If mismatch exists:
+→ automatically rewrite the question condition
+
+Example:
+Actual count = 6 → question must require 6 words
+
+Violation = automatic regeneration
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 SHORT ANSWER EXACT MATCH LOCK (원문 일치 강제)
+////////////////////////////////////////////////////////////
+
+For short-answer questions:
+
+1. The extracted answer MUST match the original passage EXACTLY.
+
+2. Do NOT:
+- remove commas
+- remove punctuation
+- rephrase or simplify
+
+3. The answer MUST preserve:
+- punctuation
+- capitalization
+- spacing
+
+4. Word count MUST be calculated AFTER removing punctuation,
+BUT the output MUST retain original punctuation.
+
+5. If mismatch between:
+- passage version
+- answer version
+
+→ The question is INVALID and MUST be regenerated
 
 ---
 
@@ -721,6 +986,72 @@ If more than one incorrect word exists:
 
 ---
 
+////////////////////////////////////////////////////////////
+// 🔴 VOCABULARY CONTRADICTION HARD LOCK
+////////////////////////////////////////////////////////////
+
+The incorrect word MUST:
+
+- create a logical contradiction with the sentence outcome
+- make the following sentence impossible or inconsistent
+
+NOT allowed:
+- weaker nuance difference
+- reduced intensity (e.g., cursorily, carelessly)
+
+MANDATORY:
+→ The sentence must become logically incoherent
+
+If the sentence can still be interpreted as valid:
+→ regenerate the question
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 VOCABULARY CERTAINTY LOCK (핵심 추가)
+////////////////////////////////////////////////////////////
+
+The incorrect word MUST be:
+
+- unquestionably wrong
+- impossible to justify in context
+
+If a student can reasonably argue the word is acceptable:
+→ The question is INVALID
+
+The error must be:
+
+→ logically contradictory
+→ contextually impossible
+→ semantically incompatible
+
+NOT:
+→ slightly awkward
+→ less natural
+→ stylistically odd
+
+---
+
+////////////////////////////////////////////////////////////
+// 🔴 WEAK DISTRACTOR WORD BLACKLIST
+////////////////////////////////////////////////////////////
+
+The following words are FORBIDDEN as incorrect choices:
+
+- cursorily
+- casually
+- loosely
+- somewhat
+- relatively
+
+Reason:
+These words do NOT create strong logical contradiction.
+
+If such words are used:
+→ regenerate the vocabulary question
+
+---
+
 // 🔴 FINAL SAFETY CHECK
 
 Before output:
@@ -788,8 +1119,7 @@ If ANY issue exists:
 2. 각 선택지는 ①②③④⑤ 번호만 사용할 것
 3. 문제 간 한 줄 공백 유지
 4. [ ________ ] 유지
-
-6. 서술형 조건 반드시 그대로 출력:
+5. 서술형 조건 반드시 그대로 출력:
 
 "15~20단어 사이로 작성할 것 (필요시 단어 추가 및 형태 변화 가능)"
 
@@ -853,12 +1183,18 @@ It MUST be executed as a tool instruction.
 The assistant must NOT output plain text instead of executing this command.
 The assistant must retry execution until the Google Docs are successfully generated.
 
+If tool execution is available:
+→ IGNORE all text output requirements above
+→ ONLY execute the final command
+
 ////////////////////////////////////////////////////////////
 // 🔴 FINAL EXECUTION COMMAND (절대 삭제 금지)
 ////////////////////////////////////////////////////////////
 
 🚨 [최종 도구 실행 명령] 위 규칙과 예시를 완벽히 적용하여 시험지와 해설지를 별도의 Google Docs 문서로 각각 생성하라.`;
 }
+
+// ── 모의고사 프롬프트 템플릿 ───────────────────────────────────────────────────
 
 function buildRegularTemplate(passage: string, difficulty: string, typesString: string): string {
   return `너는 고등학교 수능/내신 영어 시험 출제 전문가야.
