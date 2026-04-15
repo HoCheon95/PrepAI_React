@@ -1,0 +1,6 @@
+#FileLock
+#Wed Apr 15 11:13:42 KST 2026
+hostName=PC21.localdomain
+id=19d8eea712c95692baf0347a7a89cbef1f9e9647ca2
+method=file
+server=127.0.1.1\:34915
