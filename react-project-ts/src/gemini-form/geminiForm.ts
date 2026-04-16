@@ -1,3 +1,4 @@
+/* eslint-disable no-misleading-character-class */
 // Gemini 프롬프트 생성 로직 (순수 함수 모음 — DOM 의존 없음)
 
 // ── 타입 정의 ────────────────────────────────────────────────────────
@@ -611,10 +612,119 @@ ${passage}
 
 // ── 번역 워크시트 프롬프트 템플릿 ────────────────────────────────────────────
 
-function buildTranslationTemplate(passage: string): string {
-  return `외부지문 해석 해줘
+/**
+ * 지문에서 "Reading Rest Stop" 섹션을 JS에서 미리 제거하고
+ * 순수 본문 묶음 배열만 반환한다.
+ *
+ * 구조: [chunk1] + [RRS group] + [chunk2] + [RRS group] + ...
+ * "Reading Rest Stop" 이 묶음 경계 역할을 함.
+ * 각 RRS group 마지막 블록(🧠Comprehension Question)은
+ * "✅Answer:" 이후에 다음 chunk 텍스트가 이어질 수 있으므로 추출.
+ */
+function extractPassageChunks(passage: string): string[] {
+  const parts = passage.split(/\nReading Rest Stop/g);
+  const chunks: string[] = [];
 
-${passage}`;
+  for (const part of parts) {
+    const trimmed = part.trim();
+    if (!trimmed) continue;
+
+    // 첫 번째 비어있지 않은 줄로 RSS 섹션 여부 판단
+    const firstLine = trimmed.split('\n').find((l) => l.trim() !== '') ?? '';
+    const isRSSContent =
+      /[🔑🧱🧠✅👉➡]/.test(firstLine) || /^Q:/.test(firstLine.trim());
+
+    if (isRSSContent) {
+      // ✅Answer: 이후 빈 줄 다음에 본문이 이어지는 경우 추출
+      const answerIdx = part.indexOf('✅Answer:');
+      if (answerIdx !== -1) {
+        const afterAnswer = part.slice(answerIdx + '✅Answer:'.length);
+        const gapIdx = afterAnswer.indexOf('\n\n');
+        if (gapIdx !== -1) {
+          const remaining = afterAnswer.slice(gapIdx).trim();
+          if (remaining) chunks.push(remaining);
+        }
+      }
+    } else {
+      chunks.push(trimmed);
+    }
+  }
+
+  return chunks.filter((c) => c.trim() !== '');
+}
+
+function buildTranslationTemplate(passage: string): string {
+  const chunks = extractPassageChunks(passage);
+
+  // JS에서 RSS 섹션 제거 후 순수 본문만 번호 붙여 전달
+  const numberedPassage = chunks
+    .map((chunk, i) => `[${i + 1}묶음]\n${chunk}`)
+    .join('\n\n---\n\n');
+
+  // 원본 섹션 미리 조립 (Claude가 그대로 출력할 수 있도록)
+  const originalSection = chunks
+    .map((chunk) => chunk)
+    .join('\n----------------------------\n');
+
+  return `[작업]
+아래 영어 지문을 한국어로 해석하라.
+
+[중요]
+출력은 평문만 사용한다.
+출력의 각 줄은 일반 텍스트 문장으로만 작성한다.
+제목, 소제목, 강조, 목록, 인용, 코드 형식은 사용하지 않는다.
+입력 지문의 줄바꿈이나 문단 위치를 제목 구조로 해석하지 않는다.
+모든 줄은 동일한 수준의 일반 텍스트로만 출력한다.
+
+[출력 형식]
+아래 형식을 묶음마다 그대로 반복한다.
+
+## 1번
+
+원본
+영어 원문
+
+----------------------------
+해석
+한국어 해석
+
+
+## 2번
+
+원본
+영어 원문
+
+----------------------------
+해석
+한국어 해석
+
+[형식 고정 규칙]
+각 묶음의 첫 줄은 반드시 ## N번 (## 1번, ## 2번, ## 3번 ...) 형식이다.
+## N번 다음에는 빈 줄을 하나 둔다.
+그 다음 줄은 반드시 원본이다.
+원본 다음 줄부터는 해당 묶음의 영어 원문 전체를 그대로 출력한다.
+영어 원문이 끝나면 반드시 빈 줄을 하나 추가한 뒤 다음 줄에 ---------------------------- 를 출력한다.
+그 다음 줄은 반드시 해석이다.
+해석 다음 줄부터는 해당 영어 원문의 한국어 해석 전체를 출력한다.
+묶음과 묶음 사이는 빈 줄 두 개로 구분한다.
+원본과 해석이라는 단어는 수정하지 않는다.
+원본과 해석 앞뒤에 다른 문자를 추가하지 않는다.
+출력 전체에서 모든 줄은 일반 텍스트 문장이어야 한다.
+
+[출력 금지 형식]
+제목처럼 보이는 줄로 바꾸지 않는다.
+문단 첫 문장을 따로 분리하지 않는다.
+강조 표현을 넣지 않는다.
+구조를 재편집하지 않는다.
+
+지문:
+${numberedPassage}
+
+원본 텍스트:
+${originalSection}
+
+[출력 전 점검]
+출력이 지정된 형식과 정확히 일치하는지 확인한 뒤에만 답한다.`;
 }
 
 // ── 번역 워크시트 생성 파라미터 ──────────────────────────────────────────────
