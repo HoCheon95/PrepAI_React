@@ -51,6 +51,8 @@ export default function GeminiPromptGenerator() {
   const [copyLabel, setCopyLabel] = useState('📋 클립보드에 복사');
   const [translationPrompt, setTranslationPrompt] = useState('');
   const [copyTranslationLabel, setCopyTranslationLabel] = useState('📋 클립보드에 복사');
+  const [studyNotePrompt, setStudyNotePrompt] = useState('');
+  const [copyStudyNoteLabel, setCopyStudyNoteLabel] = useState('📋 클립보드에 복사');
 
   // 문제 번호 체크박스 클릭 핸들러
   const handleQuestionNoToggle = (num: number) => {
@@ -139,7 +141,7 @@ export default function GeminiPromptGenerator() {
 
   // 외부지문해석 프롬프트 생성
   const handleTranslationGenerate = () => {
-    const { prompt, error } = generateTranslationPrompt({
+    const { translationPrompt: tp, studyNotePrompt: sp, error } = generateTranslationPrompt({
       passageText,
       externalKey,
       externalRegistry: EXTERNAL_REGISTRY,
@@ -149,7 +151,8 @@ export default function GeminiPromptGenerator() {
       alert(error);
       return;
     }
-    setTranslationPrompt(prompt!);
+    setTranslationPrompt(tp!);
+    setStudyNotePrompt(sp!);
     setGeneratedPrompt('');
   };
 
@@ -158,6 +161,16 @@ export default function GeminiPromptGenerator() {
     navigator.clipboard.writeText(translationPrompt).then(() => {
       setCopyTranslationLabel('✅ 복사 완료!');
       setTimeout(() => setCopyTranslationLabel('📋 클립보드에 복사'), 2500);
+    }).catch(() => {
+      alert('복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
+    });
+  };
+
+  // 해설 정리 노트 복사
+  const copyStudyNotePrompt = () => {
+    navigator.clipboard.writeText(studyNotePrompt).then(() => {
+      setCopyStudyNoteLabel('✅ 복사 완료!');
+      setTimeout(() => setCopyStudyNoteLabel('📋 클립보드에 복사'), 2500);
     }).catch(() => {
       alert('복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
     });
@@ -360,11 +373,22 @@ export default function GeminiPromptGenerator() {
       {translationPrompt && (
         <div id="prompt-output-section">
           <div className="prompt-output-header">
-            <span className="prompt-output-title">📝 외부지문 해석 워크시트 프롬프트</span>
+            <span className="prompt-output-title">📝 외부지문 해석 프롬프트</span>
             <button className="btn-copy" onClick={copyTranslationPrompt}>{copyTranslationLabel}</button>
           </div>
           <textarea className="prompt-output-textarea" readOnly value={translationPrompt}></textarea>
-          <p className="prompt-hint">위 프롬프트를 복사하여 <strong>Gemini 웹(gemini.google.com)</strong>에 붙여넣으면 좌지문/우해석 워크시트가 생성됩니다.</p>
+          <p className="prompt-hint">위 프롬프트를 복사하여 <strong>Gemini 웹(gemini.google.com)</strong>에 붙여넣으세요.</p>
+        </div>
+      )}
+
+      {studyNotePrompt && (
+        <div id="prompt-output-section" style={{ marginTop: '16px' }}>
+          <div className="prompt-output-header">
+            <span className="prompt-output-title">📚 외부지문 해설 및 정리 노트 프롬프트</span>
+            <button className="btn-copy" onClick={copyStudyNotePrompt}>{copyStudyNoteLabel}</button>
+          </div>
+          <textarea className="prompt-output-textarea" readOnly value={studyNotePrompt}></textarea>
+          <p className="prompt-hint">위 프롬프트를 복사하여 <strong>Gemini 웹(gemini.google.com)</strong>에 붙여넣으면 노션용 해설 정리 자료가 생성됩니다.</p>
         </div>
       )}
 
