@@ -609,6 +609,44 @@ ${passage}
 위 규칙을 적용하여 생성한 시험지와 해설지를 바탕으로, 각각 별도의 Google Docs 문서로 생성해줘.`;
 }
 
+// ── 번역 워크시트 프롬프트 템플릿 ────────────────────────────────────────────
+
+function buildTranslationTemplate(passage: string): string {
+  return `외부지문 해석 해줘
+
+${passage}`;
+}
+
+// ── 번역 워크시트 생성 파라미터 ──────────────────────────────────────────────
+
+export interface GenerateTranslationParams {
+  passageText?: string;
+  externalKey?: string;
+  externalRegistry?: ExternalRegistry;
+}
+
+/**
+ * 외부 지문을 받아 "외부지문 해석 해줘 + 지문" 프롬프트를 생성한다.
+ */
+export function generateTranslationPrompt(params: GenerateTranslationParams): GenerateResult {
+  const {
+    passageText = '',
+    externalKey = '',
+    externalRegistry = {},
+  } = params;
+
+  let passage = passageText.trim();
+  if (!passage && externalKey) {
+    passage = getExternalPassageText(externalKey, externalRegistry);
+  }
+  if (!passage) {
+    return { prompt: null, error: '지문을 선택하거나 직접 입력해주세요!' };
+  }
+
+  const prompt = buildTranslationTemplate(passage);
+  return { prompt, error: null };
+}
+
 // ── 메인 함수 ────────────────────────────────────────────────────────
 
 /**

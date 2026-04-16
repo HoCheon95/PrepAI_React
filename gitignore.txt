@@ -1,0 +1,37 @@
+# 🔴 빌드 결과물 (가장 중요)
+target/
+**/target/
+bin/
+*.class
+
+# 🔴 이클립스(Eclipse) 관련 설정 파일
+.settings/
+.project
+.classpath
+.factorypath
+.metadata/
+Servers/
+
+# 🔴 VS Code 관련 설정 파일
+.vscode/
+
+# 🔴 기타 임시 파일 및 로그
+*.log
+tmp/
+temp/
+
+# 🔴 운영체제 관련 파일
+.DS_Store
+Thumbs.db
+
+# 🔴 로컬 환경 설정 (API 키 등 민감 정보 포함 - 절대 커밋 금지)
+application-local.properties
+
+# 🔴 특정 도구(BKIT) 관련 상태 및 기록 파일 제외
+.bkit/
+**/.bkit/
+
+🔴 # H2 데이터베이스 파일 제외
+*.db
+*.lock.db
+*.mv.db

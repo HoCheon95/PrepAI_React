@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import {
   generatePromptText,
+  generateTranslationPrompt,
   IMAGE_REQUIRED_NOS,
   getExternalPassageText,
   type QuestionSetting,
@@ -48,6 +49,8 @@ export default function GeminiPromptGenerator() {
 
   const [generatedPrompt, setGeneratedPrompt] = useState('');
   const [copyLabel, setCopyLabel] = useState('📋 클립보드에 복사');
+  const [translationPrompt, setTranslationPrompt] = useState('');
+  const [copyTranslationLabel, setCopyTranslationLabel] = useState('📋 클립보드에 복사');
 
   // 문제 번호 체크박스 클릭 핸들러
   const handleQuestionNoToggle = (num: number) => {
@@ -132,6 +135,32 @@ export default function GeminiPromptGenerator() {
       return;
     }
     setGeneratedPrompt(prompt!);
+  };
+
+  // 외부지문해석 프롬프트 생성
+  const handleTranslationGenerate = () => {
+    const { prompt, error } = generateTranslationPrompt({
+      passageText,
+      externalKey,
+      externalRegistry: EXTERNAL_REGISTRY,
+    });
+
+    if (error) {
+      alert(error);
+      return;
+    }
+    setTranslationPrompt(prompt!);
+    setGeneratedPrompt('');
+  };
+
+  // 번역 워크시트 복사
+  const copyTranslationPrompt = () => {
+    navigator.clipboard.writeText(translationPrompt).then(() => {
+      setCopyTranslationLabel('✅ 복사 완료!');
+      setTimeout(() => setCopyTranslationLabel('📋 클립보드에 복사'), 2500);
+    }).catch(() => {
+      alert('복사에 실패했습니다. 브라우저 설정을 확인해주세요.');
+    });
   };
 
   // 클립보드 복사
@@ -308,7 +337,14 @@ export default function GeminiPromptGenerator() {
         </div>
       </div>
 
-      <button type="button" className="btn-generate" onClick={handleGenerate}>프롬프트 생성하기 ✨</button>
+      <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+        <button type="button" className="btn-generate" onClick={handleGenerate}>프롬프트 생성하기 ✨</button>
+        {examType !== '모의고사' && (
+          <button type="button" className="btn-generate" style={{ background: '#2d6a4f' }} onClick={handleTranslationGenerate}>
+            외부지문 해석 워크시트 생성 📝
+          </button>
+        )}
+      </div>
 
       {generatedPrompt && (
         <div id="prompt-output-section">
@@ -318,6 +354,17 @@ export default function GeminiPromptGenerator() {
           </div>
           <textarea className="prompt-output-textarea" readOnly value={generatedPrompt}></textarea>
           <p className="prompt-hint">위 프롬프트를 복사하여 <strong>Gemini 웹(gemini.google.com)</strong>에 붙여넣으세요.</p>
+        </div>
+      )}
+
+      {translationPrompt && (
+        <div id="prompt-output-section">
+          <div className="prompt-output-header">
+            <span className="prompt-output-title">📝 외부지문 해석 워크시트 프롬프트</span>
+            <button className="btn-copy" onClick={copyTranslationPrompt}>{copyTranslationLabel}</button>
+          </div>
+          <textarea className="prompt-output-textarea" readOnly value={translationPrompt}></textarea>
+          <p className="prompt-hint">위 프롬프트를 복사하여 <strong>Gemini 웹(gemini.google.com)</strong>에 붙여넣으면 좌지문/우해석 워크시트가 생성됩니다.</p>
         </div>
       )}
 
