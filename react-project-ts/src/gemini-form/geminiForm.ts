@@ -259,11 +259,63 @@ Before validation, ALL sequence segments MUST:
 
 1. MUST include a referential dependency that requires a specific prior segment AND a logical constraint. Standalone conjunctions (e.g., but, and, so) are NOT sufficient.
 
-2. ITERATION & EVALUATION MARKER LOCK (CRITICAL):
-If the narrative involves repeated actions, reactions, or evaluations, the segment MUST EXPLICITLY reference the specific iteration or target.
-- FORBIDDEN: "My friend smiled gently..." (Can be placed anywhere logically).
-- REQUIRED: "After examining my second drawing, my friend smiled gently..." OR "Seeing the previous attempt..."
-- Every reaction/evaluation segment MUST contain words like "second", "previous", "that [specific object]", or "this new [action]".
+2. ITERATION & EVALUATION MARKER LOCK (CRITICAL - ABSOLUTE HARD LOCK - ZERO EXCEPTION):
+
+🚨 MANDATORY AUTO-REWRITE STEP (NO EXCEPTION):
+Before outputting ANY sequence question, you MUST scan EVERY non-first segment (A, B, C, and any sub-segment) and force-inject an ordinal/demonstrative anchor phrase at the VERY START of the segment. This is NOT optional. This is NOT conditional. You MUST physically rewrite the opening of each segment even if you believe it is already clear.
+
+🔴 ABSOLUTE FORBIDDEN OPENERS (자동 거부 — 발견 즉시 리라이트):
+- "My friend [verb]..." (X) → MUST become "Upon seeing this second drawing, my friend..."
+- "He/She [verb]..." (X) → MUST become "After examining that second sketch, he/she..."
+- "They [verb]..." (X) → MUST become "Seeing that third result, they..."
+- Any segment starting with ONLY a bare subject + verb without a prior-reference phrase = INSTANT FAIL.
+- Any segment where the first 5 words do NOT contain one of [this / that / these / those / second / third / fourth / after seeing / upon seeing / after examining / having seen / once ___ed] = INSTANT FAIL.
+
+🔴 AMBIGUOUS ANCHOR BAN (복수 참조 가능성 완전 차단 — ZERO EXCEPTION):
+The following anchor phrases are FORBIDDEN because they can refer to MULTIPLE prior segments:
+- "the previous [noun]" (X) — ambiguous when 2+ prior events exist
+- "the earlier [noun]" (X) — same ambiguity
+- "the prior [noun]" (X) — same ambiguity
+- "another [noun]" (X) — does not lock position
+- "the first [noun]" when only 2 segments precede (ambiguous with implicit order)
+
+REQUIRED REPLACEMENT — MUST use ORDINAL + DEMONSTRATIVE + OUTCOME-SPECIFIC STATE QUALIFIER that pins to EXACTLY ONE prior segment:
+- "that specifically rejected second [concrete noun]" — pins to the 2nd occurrence AND its unique negative outcome
+- "this explicitly dismissed third [concrete noun]" — pins to the 3rd occurrence AND its unique negative outcome
+- "that very first [concrete noun]" — pins to the 1st occurrence only
+⚠️ ORDINAL ALONE IS INSUFFICIENT: "second sketch" can theoretically refer to any prior item. You MUST add a OUTCOME-SPECIFIC STATE QUALIFIER that matches the UNIQUE OUTCOME of the referenced segment.
+
+🔴 STATE QUALIFIER HIERARCHY (MANDATORY — 우선순위 순):
+TIER 1 (STRONGLY PREFERRED — 결과 확정형): specifically rejected / explicitly dismissed / definitively failed / formally refused
+TIER 2 (ACCEPTABLE — 명확한 상태 변화형): abandoned / discarded / overturned / withdrawn
+TIER 3 (FORBIDDEN — 중립 동작형 ❌): requested / completed / attempted / created / freshly requested / newly completed
+→ TIER 3 words describe ACTIONS that can apply to ANY segment, NOT unique outcomes. Using them does NOT resolve ambiguity.
+
+MANDATORY CHECK: After writing the anchor, ask "Does this state qualifier describe a UNIQUE OUTCOME that happened to ONLY ONE specific segment?" If NO (e.g., "requested" — any segment could be "requested") → replace with a TIER 1 qualifier.
+
+🔴 REQUIRED OPENER TEMPLATES (반드시 이 중 하나로 시작 — ORDINAL + TIER 1/2 STATE QUALIFIER 필수):
+Template 1: "Upon seeing this [specifically rejected / explicitly dismissed] [second/third/fourth] [noun], [subject] [verb]..."
+Template 2: "After examining that [specifically rejected / definitively failed] [second/third/fourth] [noun], [subject] [verb]..."
+Template 3: "Having looked at that [formally refused / discarded] [second/third/fourth] [noun], [subject] [verb]..."
+Template 4: "When [subject] saw this [abandoned / overturned] [second/third/fourth] [noun], [verb]..."
+Template 5: "In response to the [explicitly dismissed / withdrawn] [second/third/fourth] [noun], [subject] [verb]..."
+⚠️ "previous / earlier / prior" WITHOUT an explicit ordinal number is BANNED.
+
+🔴 FICTIONAL-CONCRETE ANCHOR RULE:
+The anchor phrase MUST reference a CONCRETE, COUNTABLE object/event that appears exactly ONCE in the prior segment. Vague references like "the situation" or "this" alone are FORBIDDEN. The noun after the ordinal/demonstrative MUST be specific (drawing / attempt / sketch / request / refusal / letter / answer / etc.).
+
+🔴 THREE-STEP PRE-OUTPUT VERIFICATION (각 순서배열 문제마다 반드시 실행):
+STEP A: List every non-first segment. For each, quote its first 10 words.
+STEP B: Check — does the opening contain [ordinal/demonstrative + concrete noun referencing a unique prior event]? If NO → REWRITE the opening using one of the 5 templates above.
+STEP C: Attempt ALL non-canonical permutations (e.g., if canonical is C-B-A, test B-C-A, A-B-C, B-A-C, A-C-B, C-A-B). For each permutation, ask: "Does the narrative still read coherently?" If ANY alternative permutation is coherent → FAIL → rewrite anchors with even more specific ordinal references (second / third / fourth).
+
+🔴 CONCRETE EXAMPLE (이것이 올바른 형태):
+WRONG: (B) My friend smiled gently and indulgently. "You see yourself..."
+WRONG: (B) After examining that second sketch, my friend smiled... (❌ "second sketch" alone — theoretically ambiguous)
+WRONG: (B) After examining that freshly requested second sketch, my friend smiled... (❌ "freshly requested" — TIER 3 neutral action, any segment could be "requested")
+CORRECT: (B) After examining that specifically rejected second sketch, my friend smiled gently and indulgently. "You see yourself..."
+
+The phrase "specifically rejected second sketch" is MANDATORY — "second" pins the ordinal position, and "specifically rejected" (TIER 1) pins to the UNIQUE NEGATIVE OUTCOME of segment C (which was rejected), making it impossible to confuse with any other segment. Neutral qualifiers like "freshly requested" FAIL because requesting is an action that applies to ALL segments.
 
 3. MUST NOT be standalone descriptive sentences.
 Generic emotional or descriptive sentences without explicit referential anchors are FORBIDDEN.
@@ -387,8 +439,25 @@ CRITICAL: DISTRACTOR HOMOGENEITY RULE (No "Odd-One-Out")
 - The replacement MUST blend perfectly into the list. (e.g., If others are descriptive adjectives, instead of "approve", use "accept", "acknowledge", or match the adjective form).
 3. The "Two-Plausible" Rule: At least TWO options MUST appear contextually plausible but require deep sentence/paragraph evaluation to determine correctness. The answer MUST NOT be instantly recognizable by glancing at the 5 words alone.
 
+4. 🔴 GLANCE-TEST LOCK (어휘 튐 방지 - 절대 규칙):
+   Before finalizing a vocabulary question, apply the "5-second glance test": If the incorrect word is identifiable as the odd-one-out WITHOUT reading the passage — using only the 5 words side-by-side — the question is INVALID.
+   - Check semantic field overlap: all 5 words MUST belong to an overlapping/adjacent semantic field (e.g., all can describe physical/mental states, or all can describe a manner of action).
+   - FORBIDDEN EXAMPLE: [isolated / extraordinary / uncertainly / overpowering / sustained] — "sustained" is the only word that describes continuation/maintenance while the others describe intensity/rarity/state → TOO OBVIOUS.
+   - FORBIDDEN EXAMPLE: [natural / fitting / vivid / coherent / reinforced] — "reinforced" is the only past-participle action verb while the others are descriptive adjectives → TOO OBVIOUS.
+   - FORBIDDEN EXAMPLE: [isolated / exhausted / cumbersome / overpowering / fortified] — "fortified" implies active strengthening while the others describe burdensome/depleting states → TOO OBVIOUS.
+   - FIX: replace outliers with words matching the adjective/state semantic field of the other 4 (e.g., "sustained", "maintained", "pronounced", "heightened", "intensified", "polished").
+   - MANDATORY SELF-CHECK: List all 5 words. Ask "Do all 5 share at least one semantic/functional dimension?" If no → regenerate the incorrect choice.
+   - MANDATORY SELF-CHECK: Ask "Would a student who has NOT read the passage pick my intended answer just by pattern-matching the 5 words?" If yes → regenerate.
+   - MANDATORY SELF-CHECK: Ask "Does my incorrect choice imply ACTIVE STRENGTHENING/REINFORCING while the other 4 describe states or conditions?" If yes → replace with a word describing a state (e.g., "sustained", "maintained", "prolonged").
+
+5. 🔴 TWO-PLAUSIBLE ENFORCEMENT (변별력 강제 — CRITICAL):
+   The question MUST have AT LEAST 2 choices that appear contextually plausible when read with the passage. Guessing without careful reading MUST NOT yield the correct answer.
+   - MANDATORY SELF-CHECK: After writing the 5 choices, identify the 2nd-most-plausible distractor. If you CANNOT name a strong runner-up → the question is INVALID, regenerate the incorrect word to be more camouflaged.
+   - The correct (incorrect-in-context) word MUST require at least 2 sentences of context to eliminate. Single-sentence-level contradictions are INSUFFICIENT.
+   - If 4 options are "obviously fine" and 1 is "obviously wrong" → INVALID. Rewrite so the wrong word is subtly contradictory, not blatantly opposite.
+
 The following words are FORBIDDEN as incorrect choices:
-- cursorily, casually, loosely, somewhat, relatively
+- cursorily, casually, loosely, somewhat, relatively, reinforced, fortified, prolonged
 
 ---
 
@@ -400,6 +469,13 @@ For any short-answer/descriptive question:
 3. THEN generate the question condition based on the actual count.
 4. The extracted answer MUST match the original passage EXACTLY (preserve punctuation, capitalization, spacing).
 5. Mismatch = automatic regeneration.
+
+🔴 BOUNDARY INTEGRITY LOCK (CRITICAL - 경계 오류 방지):
+6. The extracted answer MUST begin and end at a NATURAL syntactic boundary. FORBIDDEN to cut mid-phrase.
+   - FORBIDDEN: extracting "fatigue or hunger or thirst or fear" when the passage reads "fainting from fatigue or hunger or thirst or fear" (cuts off the governing preposition "from").
+   - REQUIRED: include the leading preposition/conjunction/determiner that governs the extracted phrase, OR start the extraction at a clause boundary.
+7. UNIQUENESS CHECK: The extracted span MUST be the ONLY contiguous span in the passage that satisfies the stated word count AND the semantic condition of the question. If another span of the same length could also answer, REGENERATE with a tighter condition or different span.
+8. Before finalizing, re-read the passage and confirm: "Could a student reasonably extract a DIFFERENT span of the same word count that also fits the question?" If yes → INVALID, regenerate.
 
 ---
 
