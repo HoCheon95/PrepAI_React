@@ -632,13 +632,18 @@ export function extractPassageChunks(passage: string): string[] {
     // 첫 번째 비어있지 않은 줄로 RSS 섹션 여부 판단
     const firstLine = trimmed.split('\n').find((l) => l.trim() !== '') ?? '';
     const isRSSContent =
-      /[🔑🧱🧠✅👉➡]/.test(firstLine) || /^Q:/.test(firstLine.trim());
+      /[🔑🧱🧠✅👉➡]/.test(firstLine) ||
+      /^Q:/.test(firstLine.trim()) ||
+      /^Key Expressions/i.test(firstLine.trim()) ||
+      /^Grammar Structures/i.test(firstLine.trim()) ||
+      /^Comprehension Question/i.test(firstLine.trim());
 
     if (isRSSContent) {
       // ✅Answer: 이후 빈 줄 다음에 본문이 이어지는 경우 추출
-      const answerIdx = part.indexOf('✅Answer:');
+      const answerMarker = part.includes('✅Answer:') ? '✅Answer:' : '✅ Answer:';
+      const answerIdx = part.indexOf(answerMarker);
       if (answerIdx !== -1) {
-        const afterAnswer = part.slice(answerIdx + '✅Answer:'.length);
+        const afterAnswer = part.slice(answerIdx + answerMarker.length);
         const gapIdx = afterAnswer.indexOf('\n\n');
         if (gapIdx !== -1) {
           const remaining = afterAnswer.slice(gapIdx).trim();
